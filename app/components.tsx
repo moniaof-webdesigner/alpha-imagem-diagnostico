@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useRef, useState } from "react";
+import { ChevronDown } from "lucide-react";
 import type { Review } from "./reviews";
 import { team } from "./team";
 
@@ -350,13 +351,13 @@ export function GlobalRevealObserver() {
     registerAll(".reviews-heading > .eyebrow", "up");
     registerChildren(".reviews-title-block", "up", 95, 95);
 
-    registerAll(".trust-grid > .trust-card", "up", 70);
-    registerAll(".service-grid > .service-card", "up", 90);
-    registerAll(".glass-grid > .glass-card", "up", 85);
-    registerAll(".logo-grid > .plan-logo", "up", 60);
+    registerAll(".trust-grid > .trust-card", "scale", 70);
+    registerAll(".service-grid > .service-card", "scale", 90);
+    registerAll(".glass-grid > .glass-card", "scale", 85);
+    registerAll(".logo-grid > .plan-logo", "scale", 60);
     registerAll(".faq-list > .faq-item", "up", 55);
-    registerAll(".patient-cards > .patient-card", "up", 90);
-    registerAll(".enriched-team-grid > .enriched-doctor", "up", 80);
+    registerAll(".patient-cards > .patient-card", "scale", 90);
+    registerAll(".enriched-team-grid > .enriched-doctor", "scale", 80);
     registerAll(".editorial-gallery > .editorial-gallery-item", "scale", 75);
 
     registerAll(".about-image", "left");
@@ -560,7 +561,7 @@ export function ContactForm() {
     return () => document.removeEventListener("mousedown", close);
   }, []);
   const submit = (e: FormEvent<HTMLFormElement>) => { e.preventDefault(); const data = new FormData(e.currentTarget); const name = String(data.get("name") || ""); const interest = String(data.get("interest") || ""); const message = encodeURIComponent(`Olá, meu nome é ${name}. Gostaria de solicitar informações para agendar ${interest}.`); window.open(`https://wa.me/552730606900?text=${message}`, "_blank", "noopener,noreferrer"); };
-  return <form className="contact-form" onSubmit={submit}><label>Seu nome<input name="name" autoComplete="name" required placeholder="Como podemos chamar você?" /></label><div className="custom-select-field"><span className="custom-select-label">Exame ou serviço de interesse</span><input type="hidden" name="interest" value={interest} /><div className={`custom-select ${selectOpen ? "is-open" : ""}`} ref={selectRef}><button type="button" className="custom-select-trigger" aria-haspopup="listbox" aria-expanded={selectOpen} onClick={() => setSelectOpen(!selectOpen)} onKeyDown={(event) => { if (event.key === "Escape") setSelectOpen(false); }}><span>{interest}</span><i aria-hidden="true">⌄</i></button>{selectOpen && <div className="custom-select-menu" role="listbox" aria-label="Exame ou serviço de interesse">{options.map((option) => <button type="button" role="option" aria-selected={interest === option} className={interest === option ? "is-selected" : ""} key={option} onClick={() => { setInterest(option); setSelectOpen(false); }}>{option}{interest === option && <span aria-hidden="true">✓</span>}</button>)}</div>}</div></div><button className="button" type="submit">Continuar pelo WhatsApp <span>↗</span></button><small>Nenhum dado clínico será solicitado ou armazenado neste site.</small></form>;
+  return <form className="contact-form" onSubmit={submit}><label>Seu nome<input name="name" autoComplete="name" required placeholder="Como podemos chamar você?" /></label><div className="custom-select-field"><span className="custom-select-label">Exame ou serviço de interesse</span><input type="hidden" name="interest" value={interest} /><div className={`custom-select ${selectOpen ? "is-open" : ""}`} ref={selectRef}><button type="button" className="custom-select-trigger" aria-haspopup="listbox" aria-expanded={selectOpen} onClick={() => setSelectOpen(!selectOpen)} onKeyDown={(event) => { if (event.key === "Escape") setSelectOpen(false); }}><span>{interest}</span><ChevronDown className="custom-select-chevron" size={18} strokeWidth={1.5} aria-hidden="true" /></button>{selectOpen && <div className="custom-select-menu" role="listbox" aria-label="Exame ou serviço de interesse">{options.map((option) => <button type="button" role="option" aria-selected={interest === option} className={interest === option ? "is-selected" : ""} key={option} onClick={() => { setInterest(option); setSelectOpen(false); }}>{option}{interest === option && <span aria-hidden="true">✓</span>}</button>)}</div>}</div></div><button className="button" type="submit">Continuar pelo WhatsApp <span>↗</span></button><small>Nenhum dado clínico será solicitado ou armazenado neste site.</small></form>;
 }
 
 function ReviewStars({ rating }: { rating: number }) {
