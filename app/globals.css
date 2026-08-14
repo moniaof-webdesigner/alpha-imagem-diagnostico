@@ -46,7 +46,11 @@
 .team-section .section-heading{display:block}
 .team-section .team-intro{max-width:650px;margin:0;font-size:18px;line-height:1.7}
 .team-section{overflow:hidden}
-.team-marquee{width:100%;overflow:hidden;padding:16px 0 34px}
+.team-viewport{position:relative}
+.team-marquee{width:100%;overflow:hidden;padding:16px 60px 60px}
+.team-fade{position:absolute;top:0;bottom:0;width:112px;pointer-events:none;z-index:2}
+.team-fade-left{left:0;background:linear-gradient(90deg,#f2eff2 0%,rgba(242,239,242,0) 100%)}
+.team-fade-right{right:0;background:linear-gradient(270deg,#f2eff2 0%,rgba(242,239,242,0) 100%)}
 .team-track{display:flex;width:max-content;will-change:transform}
 .team-group{display:flex;gap:22px;padding-right:22px}
 .team-group .doctor-card{display:flex;flex:0 0 350px;flex-direction:column;min-height:545px;border:1px solid rgba(100,4,95,.1);border-radius:26px;background:#fff;overflow:hidden;box-shadow:0 18px 38px rgba(49,18,47,.09);isolation:isolate}
@@ -65,7 +69,9 @@
 .team-page-hero .container>p:last-child{max-width:850px;font-size:19px;line-height:1.75;margin-bottom:0}
 .team-page-cards{padding:20px 0 115px}
 
+@media(max-width:1024px){.team-marquee{padding:16px 28px 56px}.team-fade{width:56px}}
 @media(max-width:820px){.team-section .section-heading{margin-bottom:70px}.team-controls{top:-70px}.team-page-hero{padding:150px 0 68px}.team-page-cards{padding-bottom:90px}}
+@media(max-width:767px){.team-marquee{padding:16px 0 34px}.team-fade{display:none}}
 @media(max-width:620px){.team-section .section-heading{margin-bottom:42px}.team-controls{position:static;justify-content:flex-end;margin:0 0 14px}.team-controls button{width:48px;height:48px}.team-group .doctor-card{flex-basis:min(82vw,330px);min-height:520px}.team-page-hero{padding:135px 0 55px}.team-page-hero h1{font-size:38px}.team-page-hero .container>p:last-child{font-size:17px}.team-page-cards{padding:10px 0 72px}}
 @media(prefers-reduced-motion:reduce){.team-marquee{overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}.team-track{animation:none}.team-group:nth-child(2){display:none}.team-group .doctor-card{scroll-snap-align:center}}
 
