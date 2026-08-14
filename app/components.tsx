@@ -284,14 +284,25 @@ export function Header({ solid = false }: { solid?: boolean }) {
   return <header className={`site-header ${solid || scrolled ? "is-solid" : ""} ${open ? "menu-open" : ""}`}><div className="header-inner"><Logo inverse /><nav className={`nav ${open ? "is-open" : ""}`} aria-label="Navegação principal"><a href="/#sobre" onClick={() => setOpen(false)}>Sobre</a><a href="/exames" onClick={() => setOpen(false)}>Exames</a><a href="/equipe" onClick={() => setOpen(false)}>Equipe</a><a href="/equipe-estrutura#estrutura" onClick={() => setOpen(false)}>Estrutura</a><a href="/#convenios" onClick={() => setOpen(false)}>Convênios</a><a href="/#contato" onClick={() => setOpen(false)}>Contato</a><a className="nav-patient" href="/area-do-paciente">Área do Paciente</a><a className="button button-small" href="https://wa.me/552730606900" target="_blank" rel="noopener noreferrer">Agendar exame</a></nav><button className="menu-button" onClick={() => setOpen(!open)} aria-expanded={open} aria-label={open ? "Fechar menu" : "Abrir menu"}><span /><span /></button></div></header>;
 }
 
-function TeamCard({ person }: { person: (typeof team)[number] }) {
-  return <article className="doctor-card"><img src={person.image} alt={person.name} width="600" height="600" loading="lazy" /><div className="doctor-copy"><p>{person.role}</p><h3>{person.name}</h3><span>{person.summary}</span></div></article>;
+function TeamCard({ person, eager = false }: { person: (typeof team)[number]; eager?: boolean }) {
+  return <article className="doctor-card"><img src={person.image} alt={person.name} width="600" height="600" loading={eager ? "eager" : "lazy"} /><div className="doctor-copy"><p>{person.role}</p><h3>{person.name}</h3><span>{person.summary}</span></div></article>;
 }
 
 export function TeamCarousel() {
   const trackRef = useRef<HTMLDivElement>(null);
   const pausedRef = useRef(false);
   const offsetRef = useRef(0);
+
+  const getLoopWidth = (group: HTMLElement | null) => {
+    if (!group) return 1;
+    if (window.innerWidth > 767) return group.offsetWidth || 1;
+    const cards = Array.from(group.children) as HTMLElement[];
+    if (!cards.length) return group.offsetWidth || 1;
+    const first = cards[0].getBoundingClientRect();
+    const last = cards[cards.length - 1].getBoundingClientRect();
+    const gap = parseFloat(getComputedStyle(group).columnGap) || 0;
+    return (last.right - first.left) + gap || 1;
+  };
 
   useEffect(() => {
     const track = trackRef.current;
@@ -301,7 +312,7 @@ export function TeamCarousel() {
     let previous = performance.now();
     const animate = (now: number) => {
       const group = track.firstElementChild as HTMLElement | null;
-      const loopWidth = group?.offsetWidth || 1;
+      const loopWidth = getLoopWidth(group);
       if (!pausedRef.current && !reducedMotion.matches) offsetRef.current += Math.min(now - previous, 40) * 0.028;
       previous = now;
       offsetRef.current = ((offsetRef.current % loopWidth) + loopWidth) % loopWidth;
@@ -314,11 +325,11 @@ export function TeamCarousel() {
 
   const move = (direction: number) => {
     const group = trackRef.current?.firstElementChild as HTMLElement | null;
-    const loopWidth = group?.offsetWidth || 1;
+    const loopWidth = getLoopWidth(group);
     offsetRef.current = ((offsetRef.current + direction * 372) % loopWidth + loopWidth) % loopWidth;
   };
 
-  return <div className="team-shell"><div className="team-controls" aria-label="Controles do carrossel"><button type="button" onClick={() => move(-1)} aria-label="Ver profissionais anteriores"><ArrowLeft strokeWidth={1.3} /></button><button type="button" onClick={() => move(1)} aria-label="Ver próximos profissionais"><ArrowRight strokeWidth={1.3} /></button></div><div className="team-viewport"><div className="team-marquee" aria-label="Equipe médica da Alpha" onMouseEnter={() => { pausedRef.current = true; }} onMouseLeave={() => { pausedRef.current = false; }}><div className="team-track" ref={trackRef}>{[0, 1].map((copy) => <div className="team-group" aria-hidden={copy === 1} key={copy}>{team.map((person) => <TeamCard person={person} key={`${copy}-${person.name}`} />)}</div>)}</div></div><span className="team-fade team-fade-left" aria-hidden="true" /><span className="team-fade team-fade-right" aria-hidden="true" /></div></div>;
+  return <div className="team-shell"><div className="team-controls" aria-label="Controles do carrossel"><button type="button" onClick={() => move(-1)} aria-label="Ver profissionais anteriores"><ArrowLeft strokeWidth={1.3} /></button><button type="button" onClick={() => move(1)} aria-label="Ver próximos profissionais"><ArrowRight strokeWidth={1.3} /></button></div><div className="team-viewport"><div className="team-marquee" aria-label="Equipe médica da Alpha" onMouseEnter={() => { pausedRef.current = true; }} onMouseLeave={() => { pausedRef.current = false; }}><div className="team-track" ref={trackRef}>{[0, 1].map((copy) => <div className="team-group" aria-hidden={copy === 1} key={copy}>{team.map((person) => <TeamCard person={person} eager={copy === 1} key={`${copy}-${person.name}`} />)}</div>)}</div></div><span className="team-fade team-fade-left" aria-hidden="true" /><span className="team-fade team-fade-right" aria-hidden="true" /></div></div>;
 }
 
 type StructureImage = { src: string; alt: string; caption: string };
