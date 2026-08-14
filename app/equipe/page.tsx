@@ -1,4 +1,5 @@
 import { Footer, Header } from "../components";
+import { ArrowUpRight } from "lucide-react";
 import { team } from "../team";
 
 export default function EquipePage() {
@@ -33,7 +34,7 @@ export default function EquipePage() {
       <section className="cta-band team-page-cta">
         <div className="container cta-inner">
           <div><p className="eyebrow light">Atendimento Alpha</p><h2>Seu cuidado começa com<br />uma equipe preparada.</h2><p>Fale conosco para receber orientações e agendar seu exame.</p></div>
-          <a className="button button-light" href="https://wa.me/552730606900" target="_blank" rel="noopener noreferrer">Agendar pelo WhatsApp <span>↗</span></a>
+          <a className="button button-light" href="https://wa.me/552730606900" target="_blank" rel="noopener noreferrer">Agendar pelo WhatsApp <ArrowUpRight className="btn-arrow" strokeWidth={1.3} /></a>
         </div>
       </section>
     </main>

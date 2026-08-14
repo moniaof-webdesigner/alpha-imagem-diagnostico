@@ -1,4 +1,5 @@
 import { Footer, Header, StructureGallery } from "../components";
+import { ArrowUpRight } from "lucide-react";
 
 const structureImages = [
   { src: "/assets/fachada-2.webp", alt: "Fachada da nova unidade da Alpha Imagem e Diagnóstico na Praia do Canto", caption: "Unidade na Praia do Canto" },
@@ -46,7 +47,7 @@ export default function EquipeEstrutura() {
             <div>
               <p className="eyebrow light">Estrutura & tecnologia</p>
               <h2 id="structure-title">Um espaço preparado<br /><em>para cuidar de você.</em></h2>
-              <a className="button button-light structure-appointment" href="https://wa.me/552730606900" target="_blank" rel="noopener noreferrer">Agendar exame <span>↗</span></a>
+              <a className="button button-light structure-appointment" href="https://wa.me/552730606900" target="_blank" rel="noopener noreferrer">Agendar exame <ArrowUpRight className="btn-arrow" strokeWidth={1.3} /></a>
             </div>
             <div className="structure-editorial-copy">
               <p>Ambientes acolhedores, acesso facilitado e tecnologia reunidos em uma localização estratégica. Cada espaço foi pensado para favorecer a qualidade dos exames e tornar a experiência mais tranquila.</p>
