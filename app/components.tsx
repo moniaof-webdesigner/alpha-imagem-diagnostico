@@ -300,8 +300,7 @@ export function TeamCarousel() {
     if (!cards.length) return group.offsetWidth || 1;
     const first = cards[0].getBoundingClientRect();
     const last = cards[cards.length - 1].getBoundingClientRect();
-    const gap = parseFloat(getComputedStyle(group).columnGap) || 0;
-    return (last.right - first.left) + gap || 1;
+    return (last.right - first.left) + 22 || 1;
   };
 
   useEffect(() => {
