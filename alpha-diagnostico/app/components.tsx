@@ -124,8 +124,8 @@ export function HeroImagingCanvas() {
     function renderGlobe(timestamp = performance.now()) {
       if (!visible) return;
       const time = timestamp / 1000;
-      back.clearRect(0, 0, width, height);
-      front.clearRect(0, 0, width, height);
+      back!.clearRect(0, 0, width, height);
+      front!.clearRect(0, 0, width, height);
       angleY += 0.002;
       angleX = -0.18 + Math.sin(time * 0.09) * 0.045;
       frameCount += 1;
@@ -145,7 +145,7 @@ export function HeroImagingCanvas() {
       const scanY = Math.sin(time * 0.34) * radius * 0.7;
 
       const scanIntensity = Math.max(0, 1 - Math.abs(scanY) / Math.max(1, radius * 0.22));
-      symbol.style.filter = `brightness(${1 + scanIntensity * 0.22}) drop-shadow(0 0 ${18 + scanIntensity * 22}px rgba(232,146,224,${0.32 + scanIntensity * 0.32}))`;
+      symbol!.style.filter = `brightness(${1 + scanIntensity * 0.22}) drop-shadow(0 0 ${18 + scanIntensity * 22}px rgba(232,146,224,${0.32 + scanIntensity * 0.32}))`;
 
       for (let lat = -3; lat <= 3; lat++) {
         const phi = lat * Math.PI / 9;
@@ -153,8 +153,8 @@ export function HeroImagingCanvas() {
           const theta = i / 64 * Math.PI * 2;
           return rotateGlobe({ x: Math.cos(phi) * Math.cos(theta), y: Math.sin(phi), z: Math.cos(phi) * Math.sin(theta) });
         });
-        drawCurve(back, samples, radius, cx, cy, lat === 0 ? 0.1 : 0.055, "back");
-        drawCurve(front, samples, radius, cx, cy, lat === 0 ? 0.18 : 0.095, "front");
+        drawCurve(back!, samples, radius, cx, cy, lat === 0 ? 0.1 : 0.055, "back");
+        drawCurve(front!, samples, radius, cx, cy, lat === 0 ? 0.18 : 0.095, "front");
       }
       for (let lon = 0; lon < 7; lon++) {
         const theta = lon / 7 * Math.PI * 2;
@@ -162,15 +162,15 @@ export function HeroImagingCanvas() {
           const phi = -Math.PI / 2 + i / 48 * Math.PI;
           return rotateGlobe({ x: Math.cos(phi) * Math.cos(theta), y: Math.sin(phi), z: Math.cos(phi) * Math.sin(theta) });
         });
-        drawCurve(back, samples, radius, cx, cy, 0.045, "back");
-        drawCurve(front, samples, radius, cx, cy, 0.08, "front");
+        drawCurve(back!, samples, radius, cx, cy, 0.045, "back");
+        drawCurve(front!, samples, radius, cx, cy, 0.08, "front");
       }
 
       const projected = points.map((point) => {
         const rotated = rotateGlobe(point);
         return { ...project(rotated, radius, cx, cy), seed: point.seed };
       }).sort((a, b) => a.z - b.z);
-      drawPoints(back, projected, cy + scanY, "back");
+      drawPoints(back!, projected, cy + scanY, "back");
 
       orbitalRings.forEach((ring, orbitIndex) => {
         ring.angle += ring.speed;
@@ -178,12 +178,12 @@ export function HeroImagingCanvas() {
           const angle = i / 89 * Math.PI * 2;
           return rotate({ x: Math.cos(angle) * ring.scale, y: Math.sin(angle) * ring.scale, z: 0 }, ring.angle, ring.tiltX, ring.tiltZ);
         });
-        drawCurve(back, samples, radius, cx, cy, 0.09 - orbitIndex * 0.012, "back");
-        drawCurve(front, samples, radius, cx, cy, 0.2 - orbitIndex * 0.028, "front");
+        drawCurve(back!, samples, radius, cx, cy, 0.09 - orbitIndex * 0.012, "back");
+        drawCurve(front!, samples, radius, cx, cy, 0.2 - orbitIndex * 0.028, "front");
         const nodeAngle = ring.angle * (2.6 + orbitIndex * 0.35) + orbitIndex * 1.9;
         const node = rotate({ x: Math.cos(nodeAngle) * ring.scale, y: Math.sin(nodeAngle) * ring.scale, z: 0 }, ring.angle, ring.tiltX, ring.tiltZ);
         const p = project(node, radius, cx, cy);
-        const layer = node.z >= 0 ? front : back;
+        const layer = node.z >= 0 ? front! : back!;
         layer.beginPath();
         layer.arc(p.x, p.y, 2.6, 0, Math.PI * 2);
         layer.fillStyle = "rgba(250,225,247,0.82)";
@@ -209,7 +209,7 @@ export function HeroImagingCanvas() {
         const length = Math.max(1, Math.hypot(dx, dy));
         const bend = (index % 2 ? -1 : 1) * radius * (0.11 + index * 0.008);
         const control = { x: (start.x + end.x) / 2 - dy / length * bend, y: (start.y + end.y) / 2 + dx / length * bend };
-        const layer = (start3d.z + end3d.z) / 2 >= 0 ? front : back;
+        const layer = (start3d.z + end3d.z) / 2 >= 0 ? front! : back!;
         const breathe = 0.085 + Math.max(0, Math.sin(time * 0.52 + index * 1.7)) * 0.15;
         layer.beginPath();
         layer.moveTo(start.x, start.y);
@@ -232,19 +232,19 @@ export function HeroImagingCanvas() {
 
       anchors.forEach((anchor) => {
         const p = project(anchor, radius, cx, cy);
-        const layer = anchor.z >= 0 ? front : back;
+        const layer = anchor.z >= 0 ? front! : back!;
         layer.beginPath();
         layer.arc(p.x, p.y, anchor.z >= 0 ? 2.2 : 1.55, 0, Math.PI * 2);
         layer.fillStyle = anchor.z >= 0 ? "rgba(250,220,247,.76)" : "rgba(220,151,214,.32)";
         layer.fill();
       });
 
-      drawPoints(front, projected, cy + scanY, "front");
+      drawPoints(front!, projected, cy + scanY, "front");
 
-      backCanvas.dataset.frameCount = String(frameCount);
-      backCanvas.dataset.angleY = angleY.toFixed(5);
-      backCanvas.dataset.ringAngles = orbitalRings.map((ring) => ring.angle.toFixed(5)).join(",");
-      backCanvas.dataset.arcProgress = arcStates.map((arc) => arc.progress.toFixed(5)).join(",");
+      backCanvas!.dataset.frameCount = String(frameCount);
+      backCanvas!.dataset.angleY = angleY.toFixed(5);
+      backCanvas!.dataset.ringAngles = orbitalRings.map((ring) => ring.angle.toFixed(5)).join(",");
+      backCanvas!.dataset.arcProgress = arcStates.map((arc) => arc.progress.toFixed(5)).join(",");
       frame = requestAnimationFrame(renderGlobe);
     }
 
